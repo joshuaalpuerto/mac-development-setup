@@ -102,10 +102,8 @@ This repository is designed to be used in two phases:
 The backup script:
 
 1. Creates necessary directories in `backups/`
-2. Presents options for backing up different components
-3. Automatically categorizes backups as public-safe or private/sensitive
-4. Provides multiple security warnings for sensitive data
-5. Creates timestamped archives of your backups
+2. Provides multiple security warnings for sensitive data
+3. Creates timestamped archives of your backups
 
 ### Setup Script (`setup.sh`)
 
