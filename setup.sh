@@ -190,6 +190,11 @@ print_header "SHELL AND ENVIRONMENT SETUP"
 echo "Configure your shell environment:"
 
 if confirm "Set up iTerm2? (terminal emulator)"; then
+    if [!  -d "/Applications/iTerm.app" ]; then
+        echo "iTerm2 is not installed. Installing now..."
+        brew install --cask iterm2
+    fi
+
     if [ ! -d "$backup_iterm_dir" ]; then
         print_info "No iTerm2 backup found at $backup_iterm_dir"
         print_info "Skipping iTerm2 restoration. You can:"
@@ -776,9 +781,10 @@ if confirm "Restore macOS preferences?"; then
 fi
 
 print_header "Setup Complete!"
-echo "Your Mac has been set up according to your preferences."
+echo "Your Mac has been set up according to your preferences. For the some settings to take effect, you may need to restart your terminal or log out and back in."
 echo "If you encounter any issues, please check the individual script files in the 'scripts' directory."
 echo
 echo "Happy coding! 🚀"
 echo
 echo "Note: To backup your settings, run the backup.sh script." 
+echo "Note: for p10k theme icons to show up properly, please install the recommended fonts: $ p10k configure (then just answer Yes) " 
