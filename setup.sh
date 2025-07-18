@@ -605,6 +605,19 @@ if confirm "Set up Python? (miniconda)"; then
     print_success "Python environment setup completed."
 fi
 
+if confirm "Set up Go?"; then
+    print_header "Setting Up Go Environment"
+
+    # check if go is installed otherwise install it
+    if ! command_exists go; then
+        print_info "Go is not installed. Installing Go..."
+        brew install go
+        print_success "Go installed successfully."
+    else
+        print_success "Go is already installed."
+    fi
+fi
+
 # === CONFIGURATION AND PREFERENCES ===
 print_header "CONFIGURATION AND PREFERENCES"
 echo "Configure your development environment:"
