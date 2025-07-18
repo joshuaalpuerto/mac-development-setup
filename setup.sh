@@ -578,6 +578,33 @@ if confirm "Set up Node.js? (nvm, npm global packages)"; then
     print_success "Node.js environment setup completed." 
 fi
 
+if confirm "Set up Python? (miniconda)"; then
+    print_header "Setting Up Python Environment"
+
+    # check if python is installed otherwise install it
+    if ! command_exists python3; then
+        print_info "Python is not installed. Installing Python..."
+        brew install python
+        print_success "Python installed successfully."
+    else
+        print_success "Python is already installed."
+    fi
+    
+    # Check if Miniconda is already installed
+    if [ -d "$HOME/miniconda3" ]; then
+        print_info "Miniconda is already installed."
+        print_success "Miniconda is already installed."
+    else
+        print_info "Installing Miniconda..."
+        curl -L -O "https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh"
+        bash Miniconda3-latest-MacOSX-arm64.sh -b -p $HOME/miniconda3
+        rm Miniconda3-latest-MacOSX-arm64.sh
+        print_success "Miniconda installed successfully."
+    fi  
+
+    print_success "Python environment setup completed."
+fi
+
 # === CONFIGURATION AND PREFERENCES ===
 print_header "CONFIGURATION AND PREFERENCES"
 echo "Configure your development environment:"
