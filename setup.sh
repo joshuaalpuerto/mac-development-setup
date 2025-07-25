@@ -618,6 +618,77 @@ if confirm "Set up Go?"; then
     fi
 fi
 
+if confirm "Set up PostgreSQL?"; then
+    print_header "Setting Up PostgreSQL Database"
+
+    # Check if PostgreSQL is already installed
+    if command_exists psql; then
+        print_success "PostgreSQL is already installed."
+        postgres_version=$(psql --version)
+        print_info "Current PostgreSQL version: $postgres_version"
+    else
+        print_info "Installing PostgreSQL..."
+        brew install postgresql@15
+        
+        if [ $? -eq 0 ]; then
+            print_success "PostgreSQL installed successfully."
+            
+            # Start PostgreSQL service
+            print_info "Starting PostgreSQL service..."
+            brew services start postgresql@15
+            
+            if [ $? -eq 0 ]; then
+                print_success "PostgreSQL service started successfully."
+            else
+                print_error "Failed to start PostgreSQL service."
+            fi
+        else
+            print_error "Failed to install PostgreSQL."
+            exit 1
+        fi
+    fi
+
+    # Install PostgreSQL GUI tools
+    if confirm "Do you want to install pgAdmin (PostgreSQL GUI tool)?"; then
+        print_info "Installing pgAdmin..."
+        brew install --cask pgadmin4
+        
+        if [ $? -eq 0 ]; then
+            print_success "pgAdmin installed successfully."
+        else
+            print_error "Failed to install pgAdmin."
+        fi
+    fi
+
+    # Install additional PostgreSQL tools
+    if confirm "Do you want to install additional PostgreSQL tools (pg_dump, pg_restore, etc.)?"; then
+        print_info "Installing PostgreSQL tools..."
+        brew install postgresql@15
+        
+        if [ $? -eq 0 ]; then
+            print_success "PostgreSQL tools installed successfully."
+        else
+            print_error "Failed to install PostgreSQL tools."
+        fi
+    fi
+
+    print_info "PostgreSQL setup information:"
+    echo "• Service status: $(brew services list | grep postgresql)"
+    echo "• Default port: 5432"
+    echo "• Data directory: /opt/homebrew/var/postgresql@15"
+    echo "• Log file: /opt/homebrew/var/log/postgresql@15.log"
+    echo
+    print_info "Useful commands:"
+    echo "• Start service: brew services start postgresql@15"
+    echo "• Stop service: brew services stop postgresql@15"
+    echo "• Restart service: brew services restart postgresql@15"
+    echo "• Connect to database: psql -U postgres"
+    echo "• Create database: createdb mydatabase"
+    echo "• Drop database: dropdb mydatabase"
+
+    print_success "PostgreSQL setup completed!"
+fi
+
 # === CONFIGURATION AND PREFERENCES ===
 print_header "CONFIGURATION AND PREFERENCES"
 echo "Configure your development environment:"
