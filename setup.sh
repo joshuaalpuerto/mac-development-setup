@@ -648,6 +648,38 @@ if confirm "Set up PostgreSQL?"; then
         fi
     fi
 
+    # Set up default PostgreSQL role
+    if confirm "Do you want to create a default PostgreSQL role (postgres) with superuser privileges?"; then
+        print_info "Setting up default PostgreSQL role..."
+        
+        # Wait a moment for PostgreSQL to be fully ready
+        sleep 2
+        
+        # Create the postgres role with login and password
+        print_info "Creating postgres role..."
+        psql postgres -c "CREATE ROLE postgres WITH LOGIN PASSWORD 'postgres';" 2>/dev/null
+        
+        if [ $? -eq 0 ]; then
+            print_success "Created postgres role with login and password."
+        else
+            print_info "postgres role might already exist, continuing..."
+        fi
+        
+        # Grant superuser privileges
+        print_info "Granting superuser privileges to postgres role..."
+        psql postgres -c "ALTER ROLE postgres SUPERUSER;" 2>/dev/null
+        
+        if [ $? -eq 0 ]; then
+            print_success "Granted superuser privileges to postgres role."
+        else
+            print_info "Superuser privileges might already be set, continuing..."
+        fi
+        
+        print_info "Default PostgreSQL role setup completed."
+        print_info "You can now connect using: psql -U postgres -h localhost"
+        print_info "Password: postgres"
+    fi
+
     # Install PostgreSQL GUI tools
     if confirm "Do you want to install pgAdmin (PostgreSQL GUI tool)?"; then
         print_info "Installing pgAdmin..."
@@ -682,7 +714,7 @@ if confirm "Set up PostgreSQL?"; then
     echo "• Start service: brew services start postgresql@15"
     echo "• Stop service: brew services stop postgresql@15"
     echo "• Restart service: brew services restart postgresql@15"
-    echo "• Connect to database: psql -U postgres"
+    echo "• Connect to database: psql -U postgres -h localhost"
     echo "• Create database: createdb mydatabase"
     echo "• Drop database: dropdb mydatabase"
 
